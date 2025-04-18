@@ -66,3 +66,13 @@ use the script in scripts/CreateDB.py to create a new database and tables
 use the script in scripts/PopulateDB.py to populate the database with mock data for 20 consumers
 
 - Step 10: configure the config file in conf directory according to your needs
+
+- Step 11: make the program
+```
+make
+```
+
+- Step 12: run the program
+```
+./bin/electrical_management_system --config conf/settings.conf
+```

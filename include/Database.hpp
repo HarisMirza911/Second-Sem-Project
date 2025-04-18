@@ -20,10 +20,9 @@ namespace DataHandling {
                 this->user = user;
                 this->password = password;
                 this->database = database;
-                connect(); // Connect when the object is created
+                connect();
             }
             
-            // Add move constructor since we have a unique_ptr member
             Database(Database&& other) noexcept 
                 : host(std::move(other.host)), 
                   user(std::move(other.user)), 
@@ -31,7 +30,6 @@ namespace DataHandling {
                   database(std::move(other.database)),
                   conn(std::move(other.conn)) {}
             
-            // Add move assignment operator
             Database& operator=(Database&& other) noexcept {
                 if (this != &other) {
                     host = std::move(other.host);
@@ -70,14 +68,12 @@ namespace DataHandling {
                 }
             }
 
-            // Add this method to match the interface expected by EMS
             bool saveData(std::unordered_map<int, CORE::Billing>& consumers) {
                 try {
                     for (auto& pair : consumers) {
                         int id = pair.first;
                         CORE::Billing& billing = pair.second;
                         
-                        // First try to insert the consumer
                         try {
                             sql::Statement* stmt = conn->createStatement();
                             stmt->execute("INSERT INTO Consumers (id, name, address) VALUES (" + 
@@ -86,7 +82,6 @@ namespace DataHandling {
                                 billing.consumer.address + "')");
                             delete stmt;
                         } catch (sql::SQLException& e) {
-                            // Consumer might already exist, try to update
                             sql::Statement* stmt = conn->createStatement();
                             stmt->execute("UPDATE Consumers SET name='" + 
                                 billing.consumer.name + "', address='" + 
@@ -95,7 +90,6 @@ namespace DataHandling {
                             delete stmt;
                         }
                         
-                        // Then insert/update all billing records
                         for (const auto& history : billing.history) {
                             try {
                                 sql::Statement* stmt = conn->createStatement();
@@ -105,7 +99,6 @@ namespace DataHandling {
                                     std::to_string(history.unitsUsed) + ")");
                                 delete stmt;
                             } catch (sql::SQLException& e) {
-                                // Billing record might already exist, try to update
                                 sql::Statement* stmt = conn->createStatement();
                                 stmt->execute("UPDATE Billing SET units_used=" + 
                                     std::to_string(history.unitsUsed) + 
@@ -127,25 +120,21 @@ namespace DataHandling {
                 try {
                     std::unique_ptr<sql::Statement> stmt(conn->createStatement());
                     
-                    // Query to get all consumers
                     std::unique_ptr<sql::ResultSet> consumerRes(
                         stmt->executeQuery("SELECT id, name, address FROM Consumers")
                     );
                     
-                    // Process each consumer
                     while (consumerRes->next()) {
                         int id = consumerRes->getInt("id");
                         std::string name = consumerRes->getString("name");
                         std::string address = consumerRes->getString("address");
                         
-                        // Get billing history for this consumer
                         std::unique_ptr<sql::PreparedStatement> billingStmt(
                             conn->prepareStatement("SELECT billing_date, units_used FROM Billing WHERE consumer_id = ?")
                         );
                         billingStmt->setInt(1, id);
                         std::unique_ptr<sql::ResultSet> billingRes(billingStmt->executeQuery());
                         
-                        // Create history vector for this consumer
                         std::vector<CORE::Billing::History> history;
                         while (billingRes->next()) {
                             std::string billingDate = billingRes->getString("billing_date");
@@ -153,7 +142,6 @@ namespace DataHandling {
                             history.push_back(CORE::Billing::History(unitsUsed, billingDate));
                         }
                         
-                        // Add consumer with history to the map
                         consumers[id] = CORE::Billing(CORE::Consumer(name, id, address), history);
                         count++;
                     }

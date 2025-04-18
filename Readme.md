@@ -24,15 +24,12 @@ sudo apt install rapidjson-dev
 sudo apt install default-mysql-server
 ```
 
-- Step 2: Install MySQL
+- Step 2: enable and start mysql service
 ```
-```
-- Step 2: start mysql service
-```
-sudo systemctl start mysql
 sudo systemctl enable mysql
+sudo systemctl start mysql
 ```
-- Step 3: secure the installation
+- Step 3: secure the installation (optional but recommended)
 ```
 sudo mysql_secure_installation
 ```
@@ -42,6 +39,20 @@ Follow the prompts to set a root password and remove insecure defaults.
 ```
 sudo mysql -u root -p
 ```
+
+- Next steps are optional but recommended
 - Step 5: create a new user
+```
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+```
+
+- Step 6: grant privileges to the new user
+```
+GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+```
+
+- Step 7: flush privileges
+```
+FLUSH PRIVILEGES;
 ```
 

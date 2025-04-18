@@ -6,9 +6,10 @@ CXXFLAGS = -std=c++17 -Wall -g -O3
 SRC_DIR = src
 INCLUDE_DIR = include
 BIN_DIR = bin
+OBJ_DIR = obj
 
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-OBJS = $(SRCS:.cpp=.o)
+OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
 TARGET = $(BIN_DIR)/electrical_management_system
 
@@ -20,15 +21,16 @@ all: directories $(TARGET)
 
 directories:
 	@mkdir -p $(BIN_DIR)
+	@mkdir -p $(OBJ_DIR)
 
-%.o: %.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) $^ -o $@ $(LIBS)
 
 clean:
-	rm -f $(SRC_DIR)/*.o $(TARGET)
+	rm -f $(OBJ_DIR)/*.o $(TARGET)
 	
 run: all
 	./$(TARGET)

@@ -63,8 +63,13 @@ int main(int argc, char* argv[]) {
                 int unitsUsed;
                 cout << "Enter units used: ";
                 cin >> unitsUsed;
-                
-                ems.addConsumer(name, id, address, unitsUsed);
+                cin.ignore();
+
+                string billingDate;
+                cout << "Enter billing date(YYYY-MM-DD): ";
+                getline(cin, billingDate);
+
+                ems.addConsumer(name, id, address, unitsUsed, billingDate);
                 break;
             }
             case 2: {
@@ -86,7 +91,11 @@ int main(int argc, char* argv[]) {
             case 5: {
                 cout << "Enter ID: ";
                 cin >> id;
-                ems.calculateBill(id);
+                cin.ignore();
+                cout << "Enter billing date(YYYY-MM-DD): ";
+                string billingDate;
+                getline(cin, billingDate);
+                ems.calculateBill(id, billingDate);
                 break;
             }
             case 6: {

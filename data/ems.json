@@ -1,99 +1,182 @@
 [
-	{"name":"Malik Mohib Ameer Ali Awan","id":6969,"address":"Machar Colony Korangi, chaklala lalazar estate milad","unitsUsed":100000},
-	{"name":"Harper Clark","id":18,"address":"381 Beech St, Hillview","unitsUsed":184},
-	{"name":"Audrey Henderson","id":76,"address":"329 Sequoia Dr, Greendale","unitsUsed":326},
-	{"name":"Alexander Robinson","id":17,"address":"711 Poplar Ave, Lakeside","unitsUsed":163},
-	{"name":"Aaron Ross","id":75,"address":"661 Dogwood Ln, Brookfield","unitsUsed":314},
-	{"name":"Amelia Martinez","id":16,"address":"292 Sequoia Dr, Rivertown","unitsUsed":120},
-	{"name":"Leah Barnes","id":74,"address":"243 Aspen Ct, Hillview","unitsUsed":241},
-	{"name":"Henry Garcia","id":15,"address":"144 Dogwood Ln, Fairview","unitsUsed":294},
-	{"name":"Eli Wood","id":73,"address":"987 Redwood Rd, Lakeside","unitsUsed":277},
-	{"name":"Charlotte Thompson","id":14,"address":"808 Aspen Ct, Clearview","unitsUsed":200},
-	{"name":"Charles Watson","id":67,"address":"552 Walnut Ln, Maplewood","unitsUsed":199},
-	{"name":"Sophia Anderson","id":8,"address":"234 Chestnut St, Greenfield","unitsUsed":198},
-	{"name":"Joshua Price","id":71,"address":"354 Hickory Dr, Fairview","unitsUsed":318},
-	{"name":"Mia Harris","id":12,"address":"673 Magnolia St, Elmhurst","unitsUsed":350},
-	{"name":"Ellie Bennett","id":72,"address":"453 Magnolia St, Rivertown","unitsUsed":188},
-	{"name":"Lucas Martin","id":13,"address":"315 Redwood Rd, Pinehurst","unitsUsed":176},
-	{"name":"Noah Brown","id":3,"address":"789 Pine Rd, Lakeside","unitsUsed":189},
-	{"name":"Aurora Torres","id":62,"address":"990 Oak Ave, Greendale","unitsUsed":134},
-	{"name":"Savannah Russell","id":92,"address":"118 Magnolia St, Greenfield","unitsUsed":244},
-	{"name":"David Baker","id":33,"address":"634 Redwood Rd, Brookfield","unitsUsed":310},
-	{"name":"Isaiah Griffin","id":93,"address":"242 Redwood Rd, Cedarville","unitsUsed":158},
-	{"name":"Scarlett Nelson","id":34,"address":"521 Aspen Ct, Greendale","unitsUsed":165},
-	{"name":"Skylar Diaz","id":94,"address":"987 Aspen Ct, Oakwood","unitsUsed":209},
-	{"name":"Joseph Carter","id":35,"address":"860 Dogwood Ln, Roseville","unitsUsed":285},
-	{"name":"Thomas Ramirez","id":65,"address":"138 Cedar Dr, Cedarville","unitsUsed":262},
-	{"name":"Layla Stewart","id":46,"address":"672 Birch Blvd, Hillview","unitsUsed":238},
-	{"name":"Andrew Cox","id":59,"address":"664 Alder Rd, Lakeside","unitsUsed":249},
-	{"name":"Luke Collins","id":45,"address":"107 Cedar Dr, Lakeside","unitsUsed":205},
-	{"name":"Zoey Richardson","id":58,"address":"894 Beech St, Rivertown","unitsUsed":192},
-	{"name":"Aria Parker","id":42,"address":"889 Oak Ave, Clearview","unitsUsed":170},
-	{"name":"Nathan Bailey","id":55,"address":"516 Dogwood Ln, Pinehurst","unitsUsed":174},
-	{"name":"Stella Murphy","id":54,"address":"848 Aspen Ct, Elmhurst","unitsUsed":328},
-	{"name":"Claire Flores","id":84,"address":"356 Elm St, Clearview","unitsUsed":238},
-	{"name":"Jack Young","id":25,"address":"466 Cedar Dr, Maplewood","unitsUsed":190},
-	{"name":"John Evans","id":43,"address":"331 Pine Rd, Fairview","unitsUsed":259},
-	{"name":"Nora Rivera","id":56,"address":"748 Sequoia Dr, Clearview","unitsUsed":315},
-	{"name":"Elizabeth Hernandez","id":26,"address":"129 Birch Blvd, Elmhurst","unitsUsed":222},
-	{"name":"Adrian Washington","id":85,"address":"110 Cedar Dr, Fairview","unitsUsed":164},
-	{"name":"Gabriel Sanchez","id":47,"address":"583 Walnut Ln, Brookfield","unitsUsed":296},
-	{"name":"Daniel Rodriguez","id":19,"address":"620 Alder Rd, Brookfield","unitsUsed":276},
-	{"name":"Violet Jenkins","id":78,"address":"918 Beech St, Greenfield","unitsUsed":246},
-	{"name":"Lily Morris","id":48,"address":"495 Chestnut St, Greendale","unitsUsed":187},
-	{"name":"Anthony Rogers","id":49,"address":"134 Spruce Way, Roseville","unitsUsed":166},
-	{"name":"Zoey Reed","id":50,"address":"387 Willow Cir, Greenfield","unitsUsed":224},
-	{"name":"Isaac Cook","id":51,"address":"930 Hickory Dr, Cedarville","unitsUsed":307},
-	{"name":"Hannah Morgan","id":52,"address":"215 Magnolia St, Oakwood","unitsUsed":198},
-	{"name":"Dylan Bell","id":53,"address":"688 Redwood Rd, Maplewood","unitsUsed":143},
-	{"name":"Sofia Wright","id":28,"address":"358 Chestnut St, Clearview","unitsUsed":175},
-	{"name":"Jaxon Simmons","id":87,"address":"325 Walnut Ln, Lakeside","unitsUsed":197},
-	{"name":"Jackson Lopez","id":29,"address":"983 Spruce Way, Fairview","unitsUsed":160},
-	{"name":"Lucy Foster","id":88,"address":"882 Chestnut St, Hillview","unitsUsed":270},
-	{"name":"Riley Sullivan","id":100,"address":"814 Fir Ln, Rivertown","unitsUsed":225},
-	{"name":"Wyatt Campbell","id":41,"address":"232 Maple St, Pinehurst","unitsUsed":305},
-	{"name":"Leo Alexander","id":91,"address":"720 Hickory Dr, Roseville","unitsUsed":329},
-	{"name":"Ella Adams","id":32,"address":"275 Magnolia St, Hillview","unitsUsed":149},
-	{"name":"Eleanor Myers","id":96,"address":"643 Sequoia Dr, Elmhurst","unitsUsed":179},
-	{"name":"Samuel Perez","id":37,"address":"949 Poplar Ave, Cedarville","unitsUsed":251},
-	{"name":"Anna Bryant","id":90,"address":"163 Willow Cir, Greendale","unitsUsed":193},
-	{"name":"Logan Green","id":31,"address":"124 Hickory Dr, Lakeside","unitsUsed":347},
-	{"name":"Christian Ward","id":61,"address":"842 Maple St, Brookfield","unitsUsed":284},
-	{"name":"Olivia Smith","id":2,"address":"457 Oak Ave, Rivertown","unitsUsed":312},
-	{"name":"Avery Scott","id":30,"address":"438 Willow Cir, Rivertown","unitsUsed":203},
-	{"name":"Nolan Gonzales","id":89,"address":"698 Spruce Way, Brookfield","unitsUsed":327},
-	{"name":"Liam Johnson","id":1,"address":"123 Maple St, Fairview","unitsUsed":208},
-	{"name":"Hazel Howard","id":60,"address":"418 Fir Ln, Hillview","unitsUsed":202},
-	{"name":"Grace Mitchell","id":36,"address":"315 Sequoia Dr, Greenfield","unitsUsed":178},
-	{"name":"Lincoln Hayes","id":95,"address":"139 Dogwood Ln, Maplewood","unitsUsed":248},
-	{"name":"Riley James","id":66,"address":"797 Birch Blvd, Oakwood","unitsUsed":233},
-	{"name":"Evelyn Lewis","id":20,"address":"531 Fir Ln, Greendale","unitsUsed":168},
-	{"name":"Ezekiel Perry","id":79,"address":"718 Alder Rd, Cedarville","unitsUsed":306},
-	{"name":"Matthew Lee","id":21,"address":"182 Maple St, Roseville","unitsUsed":254},
-	{"name":"Brooklyn Powell","id":80,"address":"308 Fir Ln, Oakwood","unitsUsed":171},
-	{"name":"Abigail Walker","id":22,"address":"807 Oak Ave, Greenfield","unitsUsed":301},
-	{"name":"Thomas Long","id":81,"address":"173 Maple St, Maplewood","unitsUsed":200},
-	{"name":"Sebastian Hall","id":23,"address":"344 Pine Rd, Cedarville","unitsUsed":212},
-	{"name":"Camila Patterson","id":82,"address":"284 Oak Ave, Elmhurst","unitsUsed":260},
-	{"name":"Hunter Coleman","id":77,"address":"571 Poplar Ave, Roseville","unitsUsed":227},
-	{"name":"Chloe Roberts","id":38,"address":"471 Beech St, Oakwood","unitsUsed":320},
-	{"name":"Hudson Ford","id":97,"address":"591 Poplar Ave, Pinehurst","unitsUsed":315},
-	{"name":"Lillian Brooks","id":68,"address":"720 Chestnut St, Elmhurst","unitsUsed":345},
-	{"name":"William Thomas","id":9,"address":"561 Spruce Way, Cedarville","unitsUsed":223},
-	{"name":"Owen Turner","id":39,"address":"726 Alder Rd, Maplewood","unitsUsed":140},
-	{"name":"Madison Hamilton","id":98,"address":"236 Beech St, Clearview","unitsUsed":239},
-	{"name":"Christopher Kelly","id":69,"address":"871 Spruce Way, Pinehurst","unitsUsed":161},
-	{"name":"Isabella Jackson","id":10,"address":"980 Willow Cir, Oakwood","unitsUsed":143},
-	{"name":"Victoria Phillips","id":40,"address":"116 Fir Ln, Elmhurst","unitsUsed":292},
-	{"name":"Grayson Graham","id":99,"address":"973 Alder Rd, Fairview","unitsUsed":201},
-	{"name":"Paisley Sanders","id":70,"address":"168 Willow Cir, Clearview","unitsUsed":200},
-	{"name":"Benjamin White","id":11,"address":"119 Hickory Dr, Maplewood","unitsUsed":278},
-	{"name":"Emily Allen","id":24,"address":"199 Elm St, Oakwood","unitsUsed":336},
-	{"name":"Jason Hughes","id":83,"address":"692 Pine Rd, Pinehurst","unitsUsed":221},
-	{"name":"Addison Gray","id":64,"address":"251 Elm St, Greenfield","unitsUsed":211},
-	{"name":"Samantha Butler","id":86,"address":"473 Birch Blvd, Rivertown","unitsUsed":342},
-	{"name":"Michael King","id":27,"address":"712 Walnut Ln, Pinehurst","unitsUsed":270},
-	{"name":"Caleb Cooper","id":57,"address":"132 Poplar Ave, Fairview","unitsUsed":181},
-	{"name":"Penelope Edwards","id":44,"address":"904 Elm St, Rivertown","unitsUsed":336},
-	{"name":"Jonathan Peterson","id":63,"address":"379 Pine Rd, Roseville","unitsUsed":255}
+	{
+		"name":"User_2667",
+		"id":13,
+		"address":"Street #33, Freeland",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":127008 },
+			{ "Billing Date":"2025-02-01", "Units Used":131888 }
+		]
+	},
+	{
+		"name":"User_7823",
+		"id":12,
+		"address":"Street #91, Central City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":103987 },
+			{ "Billing Date":"2025-02-01", "Units Used":106444 }
+		]
+	},
+	{
+		"name":"User_3145",
+		"id":11,
+		"address":"Street #8, National City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":132222 },
+			{ "Billing Date":"2025-02-01", "Units Used":135650 }
+		]
+	},
+	{
+		"name":"User_6287",
+		"id":10,
+		"address":"Street #16, Midway City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":91234 },
+			{ "Billing Date":"2025-02-01", "Units Used":93210 }
+		]
+	},
+	{
+		"name":"User_4478",
+		"id":9,
+		"address":"Street #75, Smallville",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":135021 },
+			{ "Billing Date":"2025-02-01", "Units Used":136789 }
+		]
+	},
+	{
+		"name":"User_1582",
+		"id":8,
+		"address":"Street #48, Keystone City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":109222 },
+			{ "Billing Date":"2025-02-01", "Units Used":110882 }
+		]
+	},
+	{
+		"name":"User_3339",
+		"id":7,
+		"address":"Street #24, Hub City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":99453 },
+			{ "Billing Date":"2025-02-01", "Units Used":101912 }
+		]
+	},
+	{
+		"name":"User_2419",
+		"id":20,
+		"address":"Street #90, Coast City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":121347 },
+			{ "Billing Date":"2025-02-01", "Units Used":124832 }
+		]
+	},
+	{
+		"name":"User_3754",
+		"id":19,
+		"address":"Street #3, Central City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":110098 },
+			{ "Billing Date":"2025-02-01", "Units Used":111222 }
+		]
+	},
+	{
+		"name":"User_9044",
+		"id":6,
+		"address":"Street #5, Blüdhaven",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":129482 },
+			{ "Billing Date":"2025-02-01", "Units Used":133322 }
+		]
+	},
+	{
+		"name":"User_8321",
+		"id":18,
+		"address":"Street #28, Starling City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":99412 },
+			{ "Billing Date":"2025-02-01", "Units Used":102433 }
+		]
+	},
+	{
+		"name":"User_7801",
+		"id":5,
+		"address":"Street #31, Coast City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":100583 },
+			{ "Billing Date":"2025-02-01", "Units Used":103888 }
+		]
+	},
+	{
+		"name":"User_6104",
+		"id":17,
+		"address":"Street #6, Gotham",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":113300 },
+			{ "Billing Date":"2025-02-01", "Units Used":114220 }
+		]
+	},
+	{
+		"name":"User_2290",
+		"id":4,
+		"address":"Street #67, Central City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":119439 },
+			{ "Billing Date":"2025-02-01", "Units Used":123600 }
+		]
+	},
+	{
+		"name":"User_4755",
+		"id":16,
+		"address":"Street #77, National City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":108928 },
+			{ "Billing Date":"2025-02-01", "Units Used":112480 }
+		]
+	},
+	{
+		"name":"User_6731",
+		"id":3,
+		"address":"Street #42, Star City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":55488 },
+			{ "Billing Date":"2025-02-01", "Units Used":59600 }
+		]
+	},
+	{
+		"name":"User_9901",
+		"id":15,
+		"address":"Street #19, Atlantis",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":88332 },
+			{ "Billing Date":"2025-02-01", "Units Used":88999 }
+		]
+	},
+	{
+		"name":"User_5034",
+		"id":2,
+		"address":"Street #84, Metropolis",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":128347 },
+			{ "Billing Date":"2025-02-01", "Units Used":132450 }
+		]
+	},
+	{
+		"name":"User_4893",
+		"id":14,
+		"address":"Street #59, Ivy Town",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":105555 },
+			{ "Billing Date":"2025-02-01", "Units Used":107300 }
+		]
+	},
+	{
+		"name":"User_1425",
+		"id":1,
+		"address":"Street #12, Gotham",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":87532 },
+			{ "Billing Date":"2025-02-01", "Units Used":89999 }
+		]
+	}
 ]

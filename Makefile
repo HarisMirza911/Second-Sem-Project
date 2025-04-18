@@ -15,7 +15,7 @@ TARGET = $(BIN_DIR)/electrical_management_system
 
 INCLUDES = -I$(INCLUDE_DIR) -I/usr/include -I/usr/include/rapidjson
 
-LIBS = -lboost_system -lboost_program_options
+LIBS = -lboost_system -lboost_program_options -lmysqlcppconn
 
 all: directories $(TARGET)
 

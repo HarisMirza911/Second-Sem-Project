@@ -22,6 +22,10 @@ sudo apt update
 sudo apt install libboost-all-dev
 sudo apt install rapidjson-dev
 sudo apt install default-mysql-server
+sudo apt install libmysqlcppconn-dev
+sudo apt install python3
+sudo apt install python3-pip
+pip3 install mysql-connector-python
 ```
 
 - Step 2: enable and start mysql service
@@ -55,4 +59,10 @@ GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
 ```
 FLUSH PRIVILEGES;
 ```
+- Step 8: Fill the Env.sh file with your own credentials
 
+- Step 9: create a new database
+use the script in scripts/CreateDB.py to create a new database and tables
+use the script in scripts/PopulateDB.py to populate the database with mock data for 20 consumers
+
+- Step 10: configure the config file in conf directory according to your needs

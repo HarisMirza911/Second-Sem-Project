@@ -20,9 +20,8 @@ LIBS = -lboost_system -lboost_program_options
 all: directories $(TARGET)
 
 directories:
-	@mkdir -p $(BIN_DIR)
-	@mkdir -p $(OBJ_DIR)
-
+	@if [ ! -d "$(BIN_DIR)" ]; then mkdir -p $(BIN_DIR); fi
+	@if [ ! -d "$(OBJ_DIR)" ]; then mkdir -p $(OBJ_DIR); fi
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 

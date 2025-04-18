@@ -4,7 +4,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -g -O3
 
 SRC_DIR = src
-INCLUDE_DIR = Include
+INCLUDE_DIR = include
 BIN_DIR = bin
 
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)

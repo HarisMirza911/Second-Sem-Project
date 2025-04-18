@@ -8,12 +8,24 @@
 - Total Revenue
 - Save and load data
 
+# Requirements
+- MySQL
+- Boost
+- RapidJSON
+- C++17
 
-#Commands
-- Step 1: Install MySQL
+# Commands
+
+- Step 1: Install Packages
 ```
 sudo apt update
-sudo apt install mysql-server
+sudo apt install libboost-all-dev
+sudo apt install rapidjson-dev
+sudo apt install default-mysql-server
+```
+
+- Step 2: Install MySQL
+```
 ```
 - Step 2: start mysql service
 ```

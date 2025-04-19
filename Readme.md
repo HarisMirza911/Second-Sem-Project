@@ -23,6 +23,7 @@ sudo apt install libboost-all-dev
 sudo apt install rapidjson-dev
 sudo apt install default-mysql-server
 sudo apt install libmysqlcppconn-dev
+sudo apt install libimgui-dev
 sudo apt install python3
 sudo apt install python3-pip
 pip3 install mysql-connector-python

@@ -4,8 +4,31 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#include <atomic>
+#include <csignal>
+
+std::unique_ptr<CORE::EMS<DataHandling::FileHandler>> fileEms;
+std::unique_ptr<CORE::EMS<DataHandling::Database>> dbEms;
+
+void signalHandler(int signum) {
+    std::cout << "Interrupt Signal Received" << std::endl;
+    std::cout << "Stopping the program" << std::endl;
+
+    if(fileEms) {
+        fileEms.reset();
+    }
+
+    if(dbEms) {
+        dbEms.reset();
+    }
+    exit(signum);
+}
 
 int main(int argc, char* argv[]) {
+    signal(SIGINT, signalHandler);
+    signal(SIGSEGV, signalHandler);
+    signal(SIGABRT, signalHandler);
+    signal(SIGBUS, signalHandler);
     boost::property_tree::ptree pt;
     std::string config_file;
     std::string saveType;
@@ -36,9 +59,6 @@ int main(int argc, char* argv[]) {
     }
     
     // Create a pointer to hold our EMS instance
-    std::unique_ptr<CORE::EMS<DataHandling::FileHandler>> fileEms;
-    std::unique_ptr<CORE::EMS<DataHandling::Database>> dbEms;
-    
     if(saveType == "file") {
         fileEms = std::make_unique<CORE::EMS<DataHandling::FileHandler>>(
             saveFile, 

@@ -54,19 +54,6 @@ namespace DataHandling {
                     std::cerr << "MySQL error: " << e.what() << std::endl;
                 }
             }
-            
-            bool saveData(const int& id, const std::string& name, const std::string& address, const std::string& billingDate, const int& reading) {
-                try {
-                    sql::Statement* stmt = conn->createStatement();
-                    stmt->execute("INSERT INTO Consumers (id, name, address) VALUES (" + std::to_string(id) + ", '" + name + "', '" + address + "')");
-                    stmt->execute("INSERT INTO Billing (consumer_id, billing_date, units_used) VALUES (" + std::to_string(id) + ", '" + billingDate + "', " + std::to_string(reading) + ")");
-                    delete stmt;
-                    return true;
-                } catch (sql::SQLException& e) {
-                    std::cerr << "MySQL error: " << e.what() << std::endl;
-                    return false;
-                }
-            }
 
             bool saveData(std::unordered_map<int, CORE::Billing>& consumers) {
                 try {
@@ -145,6 +132,10 @@ namespace DataHandling {
                         consumers[id] = CORE::Billing(CORE::Consumer(name, id, address), history);
                         count++;
                     }
+                    
+                    // Delete all data from tables after loading
+                    stmt->execute("DELETE FROM Billing");
+                    stmt->execute("DELETE FROM Consumers");
                     
                     return true;
                 } catch (sql::SQLException& e) {

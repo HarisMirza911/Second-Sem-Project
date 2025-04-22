@@ -6,6 +6,7 @@
 #include <string>
 #include <atomic>
 #include <csignal>
+#include <thread>
 
 std::unique_ptr<CORE::EMS<DataHandling::FileHandler>> fileEms;
 std::unique_ptr<CORE::EMS<DataHandling::Database>> dbEms;
@@ -14,11 +15,18 @@ void signalHandler(int signum) {
     std::cout << "Interrupt Signal Received" << std::endl;
     std::cout << "Stopping the program" << std::endl;
 
+    // Make sure to save data before resetting
     if(fileEms) {
+        std::cout << "Saving file data..." << std::endl;
+        // Explicitly call save method if available
+        fileEms->saveAllData();
         fileEms.reset();
     }
 
     if(dbEms) {
+        std::cout << "Saving database data..." << std::endl;
+        // Explicitly call save method if available
+        dbEms->saveAllData();
         dbEms.reset();
     }
     exit(signum);
@@ -33,6 +41,7 @@ int main(int argc, char* argv[]) {
     std::string config_file;
     std::string saveType;
     std::string saveFile;
+    std::string port;
     try {
         boost::program_options::options_description desc("Allowed options");
         desc.add_options()
@@ -49,20 +58,32 @@ int main(int argc, char* argv[]) {
             boost::property_tree::ini_parser::read_ini(config_file, pt);
             saveType = pt.get<std::string>("SAVETYPE");
             saveFile = pt.get<std::string>("SAVEFILE");
+            port = pt.get<std::string>("PORT");
             std::cout << "Save type: " << saveType << std::endl;
             std::cout << "Save file: " << saveFile << std::endl;
+            std::cout << "Port: " << port << std::endl;
         }
     }
     catch(std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
-    
+    boost::asio::io_context ictx;
+    ssl::context ctx(ssl::context::sslv23);
+    ctx.set_options(
+        ssl::context::default_workarounds |
+        ssl::context::no_sslv2 |
+        ssl::context::single_dh_use);
+    ctx.use_certificate_chain_file("./conf/server.crt");
+    ctx.use_private_key_file("./conf/server.key", ssl::context::pem);
+    Network::Server server(ictx, ctx, std::stoi(port));
+
     // Create a pointer to hold our EMS instance
     if(saveType == "file") {
         fileEms = std::make_unique<CORE::EMS<DataHandling::FileHandler>>(
             saveFile, 
-            std::move(DataHandling::FileHandler(saveFile))
+            std::move(DataHandling::FileHandler(saveFile)),
+            server
         );
     } else if(saveType == "database") {
         std::string host = std::getenv("MYSQL_HOST");
@@ -87,94 +108,21 @@ int main(int argc, char* argv[]) {
         }
         dbEms = std::make_unique<CORE::EMS<DataHandling::Database>>(
             saveFile, 
-            std::move(DataHandling::Database(host, user, password, database))
+            std::move(DataHandling::Database(host, user, password, database)),
+            server
         );
     }
     
-    // Define a macro to call the appropriate EMS instance
-    #define CALL_EMS(method, ...) \
-        if(fileEms) fileEms->method(__VA_ARGS__); \
-        else if(dbEms) dbEms->method(__VA_ARGS__);
-    
-    while(true) {
-        std::cout << "1. Add Consumer" << std::endl;
-        std::cout << "2. View All Consumers" << std::endl;
-        std::cout << "3. Search Consumer by ID" << std::endl;
-        std::cout << "4. Remove Consumer" << std::endl;
-        std::cout << "5. Calculate Bill" << std::endl;
-        std::cout << "6. Generate Revenue" << std::endl;
-        std::cout << "7. Exit" << std::endl;
-        int choice;
-        std::cin >> choice;
-        
-        // Clear input buffer
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        
-        // Variables used in multiple cases
-        int id;
-        
-        switch(choice) {
-            case 1: {
-                std::string name;
-                std::cout << "Enter name: ";
-                std::getline(std::cin, name);
-                
-                std::cout << "Enter ID: ";
-                std::cin >> id;
-                std::cin.ignore();
-                
-                std::string address;
-                std::cout << "Enter address: ";
-                std::getline(std::cin, address);
-                
-                int unitsUsed;
-                std::cout << "Enter units used: ";
-                std::cin >> unitsUsed;
-                std::cin.ignore();
+    // Start the server
+    server.start();
+    std::cout << "Server started on port " << port << std::endl;
 
-                std::string billingDate;
-                std::cout << "Enter billing date(YYYY-MM-DD): ";
-                std::getline(std::cin, billingDate);
+    // Run the io_context in the main thread - this will block until all work is done
+    std::cout << "Running io_context..." << std::endl;
+    ictx.run();
 
-                CALL_EMS(addConsumer, name, id, address, unitsUsed, billingDate);
-                break;
-            }
-            case 2: {
-                if(fileEms) fileEms->viewAllConsumers();
-                else if(dbEms) dbEms->viewAllConsumers();
-                break;
-            }
-            case 3: {
-                std::cout << "Enter ID: ";
-                std::cin >> id;
-                CALL_EMS(searchConsumerByID, id);
-                break;
-            }
-            case 4: {
-                std::cout << "Enter ID: ";
-                std::cin >> id;
-                CALL_EMS(removeConsumer, id);
-                break;
-            }
-            case 5: {
-                std::cout << "Enter ID: ";
-                std::cin >> id;
-                std::cin.ignore();
-                std::cout << "Enter billing date(YYYY-MM-DD): ";
-                std::string billingDate;
-                std::getline(std::cin, billingDate);
-                CALL_EMS(calculateBill, id, billingDate);
-                break;
-            }
-            case 6: {
-                if(fileEms) fileEms->generateRevenue();
-                else if(dbEms) dbEms->generateRevenue();
-                break;
-            }
-            case 7: {
-                return 0;
-            }
-        }
-    }
+    // This line will only be reached if io_context.run() returns, which happens when there are no more asynchronous operations
+    std::cout << "Server stopped" << std::endl;
+
     return 0;
 }

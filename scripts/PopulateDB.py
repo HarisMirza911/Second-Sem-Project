@@ -1,7 +1,14 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 import mysql.connector
 import os
+import random
+import string
+from faker import Faker
 
+# Initialize Faker for generating realistic names/addresses
+fake = Faker()
+
+# Connect to the database
 mydb = mysql.connector.connect(
     host=os.getenv("MYSQL_HOST"),
     user=os.getenv("MYSQL_USER"),
@@ -9,25 +16,30 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
-
 mycursor.execute("USE " + os.getenv("MYSQL_DATABASE"))
 
-# Insert data into Consumers table using executemany() for batch insertion
-consumers_data = [
-    (1, "User_1425", "Street #12, Gotham"),
-    (2, "User_5034", "Street #84, Metropolis"),
-]
+# Generate 50 consumers
+consumers_data = []
+for i in range(1, 21):
+    name = f"User_{''.join(random.choices(string.digits, k=4))}"
+    address = fake.address().replace('\n', ', ')
+    consumers_data.append((i, name, address))
 
+mycursor.execute("DELETE FROM Billing")
+mycursor.execute("DELETE FROM Consumers")
+
+# Insert consumers
 mycursor.executemany("INSERT INTO Consumers (id, name, address) VALUES (%s, %s, %s)", consumers_data)
 
-# Insert data into Billing table using executemany() for batch insertion
-billing_data = [
-    (1, "2025-01-01", 87532),
-    (1, "2025-02-01", 89999),
-    (2, "2025-01-01", 128347),
-    (2, "2025-02-01", 132450)
-]
+# Generate billing data for each user for Jan and Feb 2025
+billing_data = []
+for consumer_id in range(1, 21):
+    jan_units = random.randint(80000, 150000)
+    feb_units = jan_units + random.randint(1000, 5000)
+    billing_data.append((consumer_id, "2025-01-01", jan_units))
+    billing_data.append((consumer_id, "2025-02-01", feb_units))
 
+# Insert billing records
 mycursor.executemany("INSERT INTO Billing (consumer_id, billing_date, units_used) VALUES (%s, %s, %s)", billing_data)
 
 # Commit the changes
@@ -43,3 +55,7 @@ mycursor.execute("""
 
 for x in mycursor:
     print(x)
+
+# Clean up
+mycursor.close()
+mydb.close()

@@ -8,6 +8,8 @@
 #include "Filehandling.hpp"
 #include "Database.hpp"
 #include "Server.hpp"
+#include <rapidjson/document.h>
+#include <rapidjson/error/en.h>
 // std::function<void(std::shared_ptr<Session>, const std::string&, const std::map<std::string, std::string>&)>;
 namespace CORE {
     template<typename SAVETYPE>
@@ -114,48 +116,99 @@ namespace CORE {
         }
 
         void onPostConsumer(std::shared_ptr<Network::Session> session, const std::string& uri, const std::map<std::string, std::string>& headers) {
-            // std::string name, int id, std::string address, int unitsUsed, std::string billingDate
             std::cout << "Processing consumer request..." << std::endl;
-            std::string id = session->get_query_param("id");
-            std::string name = session->get_query_param("name");
-            std::string address = session->get_query_param("address");
-            std::string unitsUsed = session->get_query_param("unitsUsed");
-            std::string billingDate = session->get_query_param("billingDate");
-            std::string response_body = "";
-            if (name.empty()) {
-                response_body = "{\"error\": \"Name is empty\"}";
-                std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+            
+            // Get the request body containing JSON data
+            std::string request_body = session->get_request_body();
+            
+            // Parse JSON using RapidJSON
+            rapidjson::Document document;
+            rapidjson::ParseResult parseResult = document.Parse(request_body.c_str());
+            
+            if (!parseResult) {
+                std::string error = std::string("JSON parse error: ") + 
+                                   rapidjson::GetParseError_En(parseResult.Code()) + 
+                                   " at offset " + std::to_string(parseResult.Offset());
+                std::cout << error << std::endl;
+                
+                std::string response_body = "{\"error\": \"" + error + "\"}";
+                std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + 
+                                      std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
                 session->send_response(response);
                 return;
             }
-            if (id.empty()) {
-                response_body = "{\"error\": \"ID is empty\"}";
-                std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+            
+            try {
+                // Validate required fields
+                if (!document.IsObject()) {
+                    throw std::runtime_error("Request body must be a JSON object");
+                }
+                
+                // Extract and validate name
+                if (!document.HasMember("name") || !document["name"].IsString() || document["name"].GetString()[0] == '\0') {
+                    std::string response_body = "{\"error\": \"Name is required and must be a non-empty string\"}";
+                    std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + 
+                                          std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+                    session->send_response(response);
+                    return;
+                }
+                std::string name = document["name"].GetString();
+                
+                // Extract and validate id
+                if (!document.HasMember("id") || !document["id"].IsInt()) {
+                    std::string response_body = "{\"error\": \"ID is required and must be an integer\"}";
+                    std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + 
+                                          std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+                    session->send_response(response);
+                    return;
+                }
+                int id = document["id"].GetInt();
+                
+                // Extract and validate address
+                if (!document.HasMember("address") || !document["address"].IsString() || document["address"].GetString()[0] == '\0') {
+                    std::string response_body = "{\"error\": \"Address is required and must be a non-empty string\"}";
+                    std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + 
+                                          std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+                    session->send_response(response);
+                    return;
+                }
+                std::string address = document["address"].GetString();
+                
+                // Extract and validate unitsUsed
+                if (!document.HasMember("unitsUsed") || !document["unitsUsed"].IsInt()) {
+                    std::string response_body = "{\"error\": \"Units used is required and must be an integer\"}";
+                    std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + 
+                                          std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+                    session->send_response(response);
+                    return;
+                }
+                int unitsUsed = document["unitsUsed"].GetInt();
+                
+                // Extract and validate billingDate
+                if (!document.HasMember("billingDate") || !document["billingDate"].IsString() || document["billingDate"].GetString()[0] == '\0') {
+                    std::string response_body = "{\"error\": \"Billing date is required and must be a non-empty string\"}";
+                    std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + 
+                                          std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+                    session->send_response(response);
+                    return;
+                }
+                std::string billingDate = document["billingDate"].GetString();
+                
+                // Add the consumer
+                addConsumer(name, id, address, unitsUsed, billingDate);
+                
+                std::string response_body = "{\"message\": \"Consumer added successfully with name " + name + " and id " + std::to_string(id) + "\"}";
+                std::string response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: " + 
+                                      std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
                 session->send_response(response);
-                return;
-            }
-            if (address.empty()) {
-                response_body = "{\"error\": \"Address is empty\"}";
-                std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+            } 
+            catch (const std::exception& e) {
+                std::cout << "Exception: " << e.what() << std::endl;
+                std::string response_body = "{\"error\": \"" + std::string(e.what()) + "\"}";
+                std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + 
+                                      std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
                 session->send_response(response);
-                return;
             }
-            if (unitsUsed.empty()) {
-                response_body = "{\"error\": \"Units used is empty\"}";
-                std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
-                session->send_response(response);
-                return;
-            }
-            if (billingDate.empty()) {
-                response_body = "{\"error\": \"Billing date is empty\"}";
-                std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
-                session->send_response(response);
-                return;
-            }
-            addConsumer(name, std::stoi(id), address, std::stoi(unitsUsed), billingDate);
-            response_body = "{\"message\": \"Consumer added successfully with name " + name + " and id " + id + "\"}";
-            std::string response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
-            session->send_response(response);
         }
         public:
             EMS(const std::string &filename, SAVETYPE&& saveHandler, Network::Server& server) 

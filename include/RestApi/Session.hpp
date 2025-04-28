@@ -23,6 +23,7 @@ namespace Network {
         std::string request_version_;
         std::map<std::string, std::string> request_headers_;
         std::map<std::string, std::string> query_params_;
+        std::string request_body_;
         
         // Static route tables for different HTTP methods
         static std::map<std::string, RouteHandler> get_routes_;
@@ -48,6 +49,18 @@ namespace Network {
                 [this, self](const boost::system::error_code& ec, std::size_t bytes_transferred) {
                     if (!ec) {
                         parse_request();
+                        
+                        // Check if we need to read the body (for POST/PUT requests)
+                        if ((request_method_ == "POST" || request_method_ == "PUT") && 
+                            request_headers_.find("Content-Length") != request_headers_.end()) {
+                            
+                            size_t content_length = std::stoi(request_headers_["Content-Length"]);
+                            if (content_length > 0) {
+                                read_body(content_length);
+                                return;
+                            }
+                        }
+                        
                         handle_request();
                     } else {
                         std::cerr << "Read failed: " << ec.message() << "\n";
@@ -145,6 +158,34 @@ namespace Network {
             
             send_response(response);
         }
+        void read_body(size_t content_length) {
+            // First, extract any body data already in the buffer
+            std::istream request_stream(&buffer_);
+            std::string already_read;
+            std::getline(request_stream, already_read, '\0');
+            request_body_ = already_read;
+            
+            // Calculate how much more we need to read
+            size_t bytes_remaining = content_length - request_body_.length();
+            
+            if (bytes_remaining > 0) {
+                auto self = shared_from_this();
+                boost::asio::async_read(socket_, buffer_, 
+                    boost::asio::transfer_exactly(bytes_remaining),
+                    [this, self](const boost::system::error_code& ec, std::size_t bytes_transferred) {
+                        if (!ec) {
+                            std::istream body_stream(&buffer_);
+                            std::string body_data(std::istreambuf_iterator<char>(body_stream), {});
+                            request_body_ += body_data;
+                            handle_request();
+                        } else {
+                            std::cerr << "Body read failed: " << ec.message() << "\n";
+                        }
+                    });
+            } else {
+                handle_request();
+            }
+        }
         public:
             Session(tcp::socket socket, boost::asio::ssl::context& context) : socket_(std::move(socket), context){}
 
@@ -192,6 +233,10 @@ namespace Network {
 
             int get_queries_count() const {
                 return query_params_.size();
+            }
+
+            std::string get_request_body() const {
+                return request_body_;
             }
     };
     

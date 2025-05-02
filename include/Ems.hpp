@@ -71,12 +71,19 @@ namespace CORE {
             // [{...}, {...}, {...}]
             if(id == "unknown") {
                 std::string response_body = "[";
+                bool first = true;
                 for(const auto& consumer : consumers) {
-                    response_body += "{\"id\": " + std::to_string(consumer.first) + ", \"name\": \"" + consumer.second.consumer.name + "\", \"address\": \"" + consumer.second.consumer.address + "\"},";
+                    if (!first) response_body += ",";
+                    first = false;
+                    response_body += "{\"id\": " + std::to_string(consumer.first) + 
+                                        ", \"name\": \"" + consumer.second.consumer.name + 
+                                        "\", \"address\": \"" + consumer.second.consumer.address + "\"}";
                 }
-                response_body += "\b]";
-                std::string response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+                response_body += "]";
+                std::string response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: " + 
+                                        std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
                 session->send_response(response);
+                return;
             }
 
             try {

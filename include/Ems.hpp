@@ -10,6 +10,7 @@
 #include "Server.hpp"
 #include <rapidjson/document.h>
 #include <rapidjson/error/en.h>
+#include <boost/timer/timer.hpp>
 // std::function<void(std::shared_ptr<Session>, const std::string&, const std::map<std::string, std::string>&)>;
 namespace CORE {
     template<typename SAVETYPE>
@@ -50,10 +51,11 @@ namespace CORE {
                 }
                 
                 std::cout << "Consumer found, calculating bill..." << std::endl;
-                int bill = calculateBill(consumer_id, date);
+                int unitsUsed = 0;
+                int bill = calculateBill(consumer_id, date, unitsUsed);
                 std::string name = consumers[consumer_id].consumer.name;
                 std::string address = consumers[consumer_id].consumer.address;
-                std::string response_body = "{\"message\": \"Bill details\", \"id\": \"" + id + "\", \"name\": \"" + name + "\", \"address\": \"" + address + "\", \"date\": \"" + date + "\", \"bill\": " + std::to_string(bill) + "}";
+                std::string response_body = "{\"message\": \"Bill details\", \"id\": \"" + id + "\", \"name\": \"" + name + "\", \"address\": \"" + address + "\", \"date\": \"" + date + "\", \"bill\": " + std::to_string(bill) + ", \"unitsUsed\": " + std::to_string(unitsUsed) + "}";
                 std::string response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
                 session->send_response(response);
             } catch (const std::exception& e) {
@@ -77,7 +79,14 @@ namespace CORE {
                     first = false;
                     response_body += "{\"id\": " + std::to_string(consumer.first) + 
                                         ", \"name\": \"" + consumer.second.consumer.name + 
-                                        "\", \"address\": \"" + consumer.second.consumer.address + "\"}";
+                                        "\", \"address\": \"" + consumer.second.consumer.address + "\", \"billing_dates\": [";
+                    bool first_date = true;
+                    for(const auto& history : consumer.second.history) {
+                        if (!first_date) response_body += ",";
+                        first_date = false;
+                        response_body += "\"" + history.billingDate + "\"";
+                    }
+                    response_body += "]}";
                 }
                 response_body += "]";
                 std::string response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: " + 
@@ -101,7 +110,14 @@ namespace CORE {
                 std::cout << "Consumer found, sending response..." << std::endl;
                 std::string name = consumers[consumer_id].consumer.name;
                 std::string address = consumers[consumer_id].consumer.address;
-                std::string response_body = "{\"message\": \"Consumer details\", \"id\": \"" + id + "\", \"name\": \"" + name + "\", \"address\": \"" + address + "\"}";
+                std::string response_body = "{\"message\": \"Consumer details\", \"id\": \"" + id + "\", \"name\": \"" + name + "\", \"address\": \"" + address + "\", \"billing_dates\": [";
+                bool first_date = true;
+                for(const auto& history : consumers[consumer_id].history) {
+                    if (!first_date) response_body += ",";
+                    first_date = false;
+                    response_body += "\"" + history.billingDate + "\"";
+                }
+                response_body += "]}";
                 std::string response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
                 session->send_response(response);
             }
@@ -217,6 +233,36 @@ namespace CORE {
                 session->send_response(response);
             }
         }
+
+        void onDeleteConsumer(std::shared_ptr<Network::Session> session, const std::string& uri, const std::map<std::string, std::string>& headers) {
+            std::cout << "Processing delete consumer request..." << std::endl;
+            std::string id = session->get_query_param("id", "unknown");
+            std::cout << "Request parameters - ID: " << id << std::endl;
+            if(id == "unknown") {
+                std::string response_body = "{\"error\": \"ID is required and must be an integer\"}";
+                std::string response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nContent-Length: " + 
+                                      std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+                session->send_response(response);
+                return;
+            }
+
+            int consumer_id = std::stoi(id);
+            std::cout << "Looking for consumer with ID: " << consumer_id << std::endl;
+            
+            // Check if consumer exists
+            if (consumers.find(consumer_id) == consumers.end()) {
+                std::cout << "Consumer not found" << std::endl;
+                std::string response_body = "{\"error\": \"Consumer with ID " + id + " not found\"}";
+                std::string response = "HTTP/1.1 404 Not Found\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+                session->send_response(response);
+                return;
+            }
+
+            removeConsumer(consumer_id);
+            std::string response_body = "{\"message\": \"Consumer with ID " + id + " removed successfully\"}";
+            std::string response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
+            session->send_response(response);
+        }
         public:
             EMS(const std::string &filename, SAVETYPE&& saveHandler, Network::Server& server) 
                 : saveFile(filename), saveHandler(std::move(saveHandler)), server(server) {
@@ -239,6 +285,9 @@ namespace CORE {
                     this->onPostConsumer(session, uri, headers);
                 });
 
+                Network::Session::register_delete("/consumer", [this](std::shared_ptr<Network::Session> session, const std::string& uri, const std::map<std::string, std::string>& headers) {
+                    this->onDeleteConsumer(session, uri, headers);
+                });
             }
 
             void addConsumer(std::string name, int id, std::string address, int unitsUsed, std::string billingDate) {
@@ -296,11 +345,12 @@ namespace CORE {
                 }
             }
 
-            int calculateBill(int id, std::string billingDate) {
+            int calculateBill(int id, std::string billingDate, int& unitsUsed) {
                 auto itr = consumers.find(id);
                 if (itr != consumers.end()) {
                     auto rate = itr->second.getRate(billingDate);
                     int bill = rate.first * rate.second;
+                    unitsUsed = rate.second;
                     std::cout << "Bill for consumer with ID " << id << " is " << bill << std::endl;
                     return bill;
                 }

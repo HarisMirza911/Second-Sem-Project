@@ -14,9 +14,9 @@ MAIN_OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(MAIN_SRCS))
 
 MAIN_TARGET = $(BIN_DIR)/electrical_management_system
 
-INCLUDES = -I$(INCLUDE_DIR) -I/usr/include -I/usr/include/rapidjson -I$(INCLUDE_DIR)/RestApi
+INCLUDES = -I$(INCLUDE_DIR) -I/usr/include -I/usr/include/rapidjson -I$(INCLUDE_DIR)/RestApi -I$(INCLUDE_DIR)/Monitoring
 
-LIBS = -lboost_system -lboost_program_options -lmysqlcppconn -lssl -lcrypto -lpthread
+LIBS = -lboost_system -lboost_program_options -lmysqlcppconn -lssl -lcrypto -lpthread -lprometheus-cpp-core -lprometheus-cpp-pull
 
 all: directories $(MAIN_TARGET)
 

@@ -11,6 +11,7 @@
 #include <rapidjson/document.h>
 #include <rapidjson/error/en.h>
 #include <boost/timer/timer.hpp>
+#include "Prometheus.hpp"
 // std::function<void(std::shared_ptr<Session>, const std::string&, const std::map<std::string, std::string>&)>;
 namespace CORE {
     template<typename SAVETYPE>
@@ -22,8 +23,9 @@ namespace CORE {
         std::string saveFile;
         SAVETYPE saveHandler;
         Network::Server& server;
-
+        Monitoring::Prometheus& prometheus;
         void onGetBill(std::shared_ptr<Network::Session> session, const std::string& uri, const std::map<std::string, std::string>& headers) {
+            prometheus.incrementRequest("GET /bill");
             std::cout << "Processing bill request..." << std::endl;
             std::string id = session->get_query_param("id", "unknown");
             std::string date = session->get_query_param("date", "unknown");
@@ -72,6 +74,7 @@ namespace CORE {
             std::cout << "Request parameters - ID: " << id << std::endl;
             // [{...}, {...}, {...}]
             if(id == "unknown") {
+                prometheus.incrementRequest("GET /consumer all");
                 std::string response_body = "[";
                 bool first = true;
                 for(const auto& consumer : consumers) {
@@ -99,6 +102,7 @@ namespace CORE {
                 int consumer_id = std::stoi(id);
                 std::cout << "Looking for consumer with ID: " << consumer_id << std::endl;
                 
+                prometheus.incrementRequest("GET /consumer");
                 if(consumers.find(consumer_id) == consumers.end()) {
                     std::cout << "Consumer not found" << std::endl;
                     std::string response_body = "{\"error\": \"Consumer with ID " + id + " not found\"}";
@@ -132,6 +136,7 @@ namespace CORE {
         }
 
         void onGetRevenue(std::shared_ptr<Network::Session> session, const std::string& uri, const std::map<std::string, std::string>& headers) {
+            prometheus.incrementRequest("GET /revenue");
             std::cout << "Processing revenue request..." << std::endl;
             std::string response_body = "{\"message\": \"Revenue details\", \"revenue\": " + std::to_string(revenue) + "}";
             std::string response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: " + std::to_string(response_body.length()) + "\r\n\r\n" + response_body;
@@ -139,6 +144,7 @@ namespace CORE {
         }
 
         void onPostConsumer(std::shared_ptr<Network::Session> session, const std::string& uri, const std::map<std::string, std::string>& headers) {
+            prometheus.incrementRequest("POST /consumer");
             std::cout << "Processing consumer request..." << std::endl;
             
             // Get the request body containing JSON data
@@ -235,6 +241,7 @@ namespace CORE {
         }
 
         void onDeleteConsumer(std::shared_ptr<Network::Session> session, const std::string& uri, const std::map<std::string, std::string>& headers) {
+            prometheus.incrementRequest("DELETE /consumer");
             std::cout << "Processing delete consumer request..." << std::endl;
             std::string id = session->get_query_param("id", "unknown");
             std::cout << "Request parameters - ID: " << id << std::endl;
@@ -264,8 +271,8 @@ namespace CORE {
             session->send_response(response);
         }
         public:
-            EMS(const std::string &filename, SAVETYPE&& saveHandler, Network::Server& server) 
-                : saveFile(filename), saveHandler(std::move(saveHandler)), server(server) {
+            EMS(const std::string &filename, SAVETYPE&& saveHandler, Network::Server& server, Monitoring::Prometheus& prometheus) 
+                : saveFile(filename), saveHandler(std::move(saveHandler)), server(server), prometheus(prometheus) {
                 this->saveHandler.loadData(consumers);
                 generateRevenue();
                 // Register the route handler BEFORE starting the server
@@ -376,6 +383,10 @@ namespace CORE {
                 std::cout << "Saving " << consumers.size() << " consumer records..." << std::endl;
                 saveHandler.saveData(consumers);
                 std::cout << "Data saved successfully." << std::endl;
+            }
+
+            void handleCrash(const std::string& reason) {
+                prometheus.incrementCrash(reason);
             }
 
         ~EMS() {

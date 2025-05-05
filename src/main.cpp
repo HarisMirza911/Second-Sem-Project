@@ -1,4 +1,5 @@
 #include "Ems.hpp"
+#include "Prometheus.hpp"
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/program_options.hpp>
 #include <iostream>
@@ -19,13 +20,38 @@ void signalHandler(int signum) {
     if(fileEms) {
         std::cout << "Saving file data..." << std::endl;
         // Explicitly call save method if available
+        if(signum == SIGINT) {
+            fileEms->handleCrash("SIGINT - Interrupt Signal Received");
+        } else if(signum == SIGSEGV) {
+            fileEms->handleCrash("SIGSEGV - Segmentation Fault");
+        } else if(signum == SIGABRT) {
+            fileEms->handleCrash("SIGABRT - Abort Signal Received");
+        } else if(signum == SIGBUS) { 
+            fileEms->handleCrash("SIGBUS - Bus Error");
+        } else if(signum == SIGILL) {
+            fileEms->handleCrash("SIGILL - Illegal Instruction");
+        } else if(signum == SIGFPE) {
+            fileEms->handleCrash("SIGFPE - Floating Point Exception");
+        }
         fileEms->saveAllData();
         fileEms.reset();
     }
 
     if(dbEms) {
         std::cout << "Saving database data..." << std::endl;
-        // Explicitly call save method if available
+        if(signum == SIGINT) {
+            dbEms->handleCrash("SIGINT - Interrupt Signal Received");
+        } else if(signum == SIGSEGV) {
+            dbEms->handleCrash("SIGSEGV - Segmentation Fault");
+        } else if(signum == SIGABRT) {
+            dbEms->handleCrash("SIGABRT - Abort Signal Received");
+        } else if(signum == SIGBUS) { 
+            dbEms->handleCrash("SIGBUS - Bus Error");
+        } else if(signum == SIGILL) {
+            dbEms->handleCrash("SIGILL - Illegal Instruction");
+        } else if(signum == SIGFPE) {
+            dbEms->handleCrash("SIGFPE - Floating Point Exception");
+        }
         dbEms->saveAllData();
         dbEms.reset();
     }
@@ -42,6 +68,7 @@ int main(int argc, char* argv[]) {
     std::string saveType;
     std::string saveFile;
     std::string port;
+    std::string prometheusPort;
     try {
         boost::program_options::options_description desc("Allowed options");
         desc.add_options()
@@ -59,6 +86,7 @@ int main(int argc, char* argv[]) {
             saveType = pt.get<std::string>("SAVETYPE");
             saveFile = pt.get<std::string>("SAVEFILE");
             port = pt.get<std::string>("PORT");
+            prometheusPort = pt.get<std::string>("PROMETHEUS_PORT");
             std::cout << "Save type: " << saveType << std::endl;
             std::cout << "Save file: " << saveFile << std::endl;
             std::cout << "Port: " << port << std::endl;
@@ -77,13 +105,15 @@ int main(int argc, char* argv[]) {
     ctx.use_certificate_chain_file("./conf/server.crt");
     ctx.use_private_key_file("./conf/server.key", ssl::context::pem);
     Network::Server server(ictx, ctx, std::stoi(port));
+    Monitoring::Prometheus prometheus(std::stoi(prometheusPort));
 
     // Create a pointer to hold our EMS instance
     if(saveType == "file") {
         fileEms = std::make_unique<CORE::EMS<DataHandling::FileHandler>>(
             saveFile, 
             std::move(DataHandling::FileHandler(saveFile)),
-            server
+            server, 
+            prometheus
         );
     } else if(saveType == "database") {
         std::string host = std::getenv("MYSQL_HOST");
@@ -109,7 +139,8 @@ int main(int argc, char* argv[]) {
         dbEms = std::make_unique<CORE::EMS<DataHandling::Database>>(
             saveFile, 
             std::move(DataHandling::Database(host, user, password, database)),
-            server
+            server, 
+            prometheus
         );
     }
     

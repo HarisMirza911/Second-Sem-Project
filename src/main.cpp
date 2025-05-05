@@ -63,6 +63,8 @@ int main(int argc, char* argv[]) {
     signal(SIGSEGV, signalHandler);
     signal(SIGABRT, signalHandler);
     signal(SIGBUS, signalHandler);
+    signal(SIGILL, signalHandler);
+    signal(SIGFPE, signalHandler);
     boost::property_tree::ptree pt;
     std::string config_file;
     std::string saveType;

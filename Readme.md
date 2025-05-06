@@ -24,6 +24,8 @@ Further It Uses **Rapid Json** For Fast Json Parsing and **My SQL Connector** Fo
 - Python3
 - Python3-pip
 - Android-Adb
+- Prometheus For Monitoring
+- Graffana For Visualization
 
 # General Required Packages
 ```
@@ -36,6 +38,8 @@ sudo apt install python3
 sudo apt install python3-pip
 sudo apt install android-tools-adb
 pip3 install mysql-connector-python
+Download from source https://github.com/prometheus/prometheus
+download from source https://grafana.com/grafana/download?platform=linux
 ```
 
 # Commands For Server

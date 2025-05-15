@@ -1,10 +1,177 @@
 [
 	{
-		"name":"Ronnie Jacobs",
-		"id":572,
-		"address":"87178 Downs Station Apt. 200, South Josephberg, CT 24297",
+		"name":"User_2667",
+		"id":13,
+		"address":"Street #33, Freeland",
 		"data":[
-			{ "Billing Date":"05-04-16", "Units Used":233 }
+			{ "Billing Date":"2025-01-01", "Units Used":127008 },
+			{ "Billing Date":"2025-02-01", "Units Used":131888 }
+		]
+	},
+	{
+		"name":"User_7823",
+		"id":12,
+		"address":"Street #91, Central City",
+		"data":[
+			{ "Billing Date":"2025-01-01", "Units Used":103987 },
+			{ "Billing Date":"2025-02-01", "Units Used":106444 }
+		]
+	},
+	{
+		"name":"User_3312",
+		"id":14,
+		"address":"Block A, Rivertown",
+		"data":[
+			{ "Billing Date":"2025-01-15", "Units Used":75422 },
+			{ "Billing Date":"2025-02-15", "Units Used":77830 }
+		]
+	},
+	{
+		"name":"User_9182",
+		"id":15,
+		"address":"Sector 9, Gotham Heights",
+		"data":[
+			{ "Billing Date":"2025-02-01", "Units Used":89450 },
+			{ "Billing Date":"2025-03-01", "Units Used":91233 }
+		]
+	},
+	{
+		"name":"User_8821",
+		"id":16,
+		"address":"Street 10, Eastonville",
+		"data":[
+			{ "Billing Date":"2025-01-05", "Units Used":62500 },
+			{ "Billing Date":"2025-02-05", "Units Used":64320 },
+			{ "Billing Date":"2025-03-05", "Units Used":66110 }
+		]
+	},
+	{
+		"name":"User_3345",
+		"id":17,
+		"address":"Main Road, Springvale",
+		"data":[
+			{ "Billing Date":"2025-01-10", "Units Used":121220 },
+			{ "Billing Date":"2025-02-10", "Units Used":125410 }
+		]
+	},
+	{
+		"name":"User_7832",
+		"id":18,
+		"address":"Hilltop Lane, Brookside",
+		"data":[
+			{ "Billing Date":"2025-01-20", "Units Used":45678 },
+			{ "Billing Date":"2025-02-20", "Units Used":46990 },
+			{ "Billing Date":"2025-03-20", "Units Used":48123 }
+		]
+	},
+	{
+		"name":"User_1002",
+		"id":19,
+		"address":"West End Ave, Newburg",
+		"data":[
+			{ "Billing Date":"2025-02-01", "Units Used":98012 },
+			{ "Billing Date":"2025-03-01", "Units Used":100300 }
+		]
+	},
+	{
+		"name":"User_4099",
+		"id":20,
+		"address":"Lane 5, Rockfield",
+		"data":[
+			{ "Billing Date":"2025-01-12", "Units Used":78880 },
+			{ "Billing Date":"2025-02-12", "Units Used":80155 }
+		]
+	},
+	{
+		"name":"User_8765",
+		"id":21,
+		"address":"Plot 21, Southport",
+		"data":[
+			{ "Billing Date":"2025-03-01", "Units Used":90000 },
+			{ "Billing Date":"2025-04-01", "Units Used":91720 }
+		]
+	},
+	{
+		"name":"User_5410",
+		"id":22,
+		"address":"Baker Street, Sunnytown",
+		"data":[
+			{ "Billing Date":"2025-01-03", "Units Used":30010 },
+			{ "Billing Date":"2025-02-03", "Units Used":31500 }
+		]
+	},
+	{
+		"name":"User_6100",
+		"id":23,
+		"address":"Hillcrest Blvd, Northbay",
+		"data":[
+			{ "Billing Date":"2025-02-07", "Units Used":45880 },
+			{ "Billing Date":"2025-03-07", "Units Used":47050 }
+		]
+	},
+	{
+		"name":"User_9023",
+		"id":24,
+		"address":"Greenfield Rd, Laketown",
+		"data":[
+			{ "Billing Date":"2025-01-17", "Units Used":55321 },
+			{ "Billing Date":"2025-02-17", "Units Used":57022 }
+		]
+	},
+	{
+		"name":"User_7650",
+		"id":25,
+		"address":"Central Avenue, New Dawn",
+		"data":[
+			{ "Billing Date":"2025-01-30", "Units Used":81200 },
+			{ "Billing Date":"2025-02-28", "Units Used":83410 }
+		]
+	},
+	{
+		"name":"User_8844",
+		"id":26,
+		"address":"Sunrise Park, Maplewood",
+		"data":[
+			{ "Billing Date":"2025-02-14", "Units Used":66000 },
+			{ "Billing Date":"2025-03-14", "Units Used":67890 }
+		]
+	},
+	{
+		"name":"User_1200",
+		"id":27,
+		"address":"Elm Street, Brightmoor",
+		"data":[
+			{ "Billing Date":"2025-01-25", "Units Used":70230 },
+			{ "Billing Date":"2025-02-25", "Units Used":71988 },
+			{ "Billing Date":"2025-03-25", "Units Used":73544 }
+		]
+	},
+	{
+		"name":"User_3201",
+		"id":28,
+		"address":"Pearl Lane, Windmere",
+		"data":[
+			{ "Billing Date":"2025-02-11", "Units Used":54211 },
+			{ "Billing Date":"2025-03-11", "Units Used":55600 }
+		]
+	},
+	{
+		"name":"User_4563",
+		"id":29,
+		"address":"Harmony Drive, Clearwater",
+		"data":[
+			{ "Billing Date":"2025-03-01", "Units Used":60420 },
+			{ "Billing Date":"2025-04-01", "Units Used":62030 }
+		]
+	},
+	{
+		"name":"User_9981",
+		"id":30,
+		"address":"Ocean View, East Shore",
+		"data":[
+			{ "Billing Date":"2025-01-13", "Units Used":78000 },
+			{ "Billing Date":"2025-02-13", "Units Used":79600 },
+			{ "Billing Date":"2025-03-13", "Units Used":81250 }
 		]
 	}
 ]
